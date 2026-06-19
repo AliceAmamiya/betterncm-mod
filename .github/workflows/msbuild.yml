@@ -34,8 +34,9 @@ jobs:
       with:
         vcpkgGitCommitId: 69efe9cc2df0015f0bb2d37d55acde4a75c9a25b
     - name: Install vcpkg dependencies
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: ./InstallDependencies.bat
+      run: |
+        & "$env:VCPKG_ROOT\vcpkg.exe" install --triplet=x86-windows --x-install-root=./vcpkg_installed_86/
+        & "$env:VCPKG_ROOT\vcpkg.exe" install --triplet=x64-windows --x-install-root=./vcpkg_installed/
     - name: Install NPM packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: cd ./src/js-framework ; npm i
