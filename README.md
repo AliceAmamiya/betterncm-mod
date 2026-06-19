@@ -6,6 +6,9 @@
 
 <h4 align="center">PC版 NCM 客户端插件管理器</h4>
 
+> [!NOTE]
+> 将默认数据文件夹从`C:\BetterNCM` 改动至betterncm的安装目录以方便绿色版网易云使用。 --Riko
+
 > [!WARNING]
 > 由于网易云国语版权太不齐，开发者去用 QQ 音乐了，此项目处于较低维护优先级..
 > 
