@@ -5,11 +5,14 @@ on:
     branches: [ "v2" ]
   pull_request:
     branches: [ "v2" ]
+    
 
 env:
+  SOLUTION_FILE_PATH: .
   BUILD_CONFIGURATION: Release
   VCPKG_DEFAULT_TRIPLET: x86-windows
   VCPKG_INSTALLED_DIR: ./vcpkg_installed/
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 permissions:
   contents: read
@@ -24,20 +27,21 @@ jobs:
         submodules: recursive
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
-
+      uses: microsoft/setup-msbuild@v1.0.2
+      
     - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
+      uses: lukka/run-vcpkg@v10
       with:
         vcpkgGitCommitId: 69efe9cc2df0015f0bb2d37d55acde4a75c9a25b
-
     - name: Install vcpkg dependencies
+      working-directory: ${{env.GITHUB_WORKSPACE}}
       run: ./InstallDependencies.bat
-
     - name: Install NPM packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
       run: cd ./src/js-framework ; npm i
 
     - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild .\BetterNCMII.sln -p:Platform="All" -p:Configuration=Release
 
     - uses: "marvinpinto/action-automatic-releases@latest"
@@ -59,3 +63,5 @@ jobs:
         path: |
           ${{ github.workspace }}/x64/Release/BetterNCMII.dll
           ${{ github.workspace }}/Release_86/BetterNCMII86.dll
+        
+
