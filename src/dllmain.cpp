@@ -38,7 +38,10 @@ void bncmMain() {
 					datapath = util::getEnvironment("BETTERNCM_PROFILE");
 				}
 				else {
-					datapath = "C:\\betterncm"; // 不再向前兼容
+					// Resolve data directory relative to the DLL's own location
+				wchar_t dllPath[MAX_PATH];
+				GetModuleFileNameW(g_hModule, dllPath, MAX_PATH);
+				datapath = std::filesystem::path(dllPath).parent_path() / L"betterncm";
 				}
 
 				if (process_type == Main) {
