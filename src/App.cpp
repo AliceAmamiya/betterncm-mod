@@ -436,7 +436,7 @@ std::thread* App::create_server(const std::string& apiKey) {
 			res.set_content(path.utf8(), "text/plain");
 		});
 
-		// ¼ÓÔØ²å¼þ¹ÜÀíÆ÷µÄÑùÊ½ÎÄ¼þ
+		// åŠ è½½æ’ä»¶ç®¡ç†å™¨çš„æ ·å¼æ–‡ä»¶
 		svr->Get("/api/internal/framework.css", [&](const httplib::Request& req, httplib::Response& res) {
 			checkApiKey;
 			res.set_content(load_string_resource(L"framework.css"), "text/css");
@@ -458,7 +458,7 @@ void App::parseConfig() {
 			config = nlohmann::json::parse(read_to_string(datapath + L"\\config.json"));
 		}
 		catch (std::exception e) {
-			std::wcout << L"[BetterNCM] ½âÎöÅäÖÃÎÄ¼þÊ§°Ü£¡½«Ê¹ÓÃÄ¬ÈÏÅäÖÃÎÄ¼þ\n\n";
+			std::wcout << L"[BetterNCM] è§£æžé…ç½®æ–‡ä»¶å¤±è´¥ï¼å°†ä½¿ç”¨é»˜è®¤é…ç½®æ–‡ä»¶\n\n";
 		}
 	}
 }
@@ -614,7 +614,7 @@ betterncm.utils.waitForElement('.g-sd').then(ele=>{
 
 		for (const auto& plugin : PluginManager::getAllPlugins()) {
 			for(const auto& [version_req, hijacks_actions]: plugin->manifest.hijacks) {
-				if(semver::range::satisfies(ncmVersion,version_req))
+				if(util::semverSatisfies(ncmVersion, version_req))
 				for (const auto& [hijack_url, actions] : hijacks_actions) {
 					if (url.starts_with(hijack_url)) {
 						for (const auto& action : actions) {

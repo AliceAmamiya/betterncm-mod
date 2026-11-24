@@ -32,7 +32,7 @@ jobs:
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
       with:
-        vcpkgGitCommitId: 40e9e742d5fef85832e3a82cb15a3ca6c8cf76ed
+        vcpkgGitCommitId: 2f8bf7a5bad48aaef99d80b221fca712f016ab8f
     - name: Install vcpkg dependencies
       run: ./InstallDependencies.bat
     - name: Install NPM packages

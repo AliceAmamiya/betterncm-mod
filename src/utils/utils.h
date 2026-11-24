@@ -70,7 +70,11 @@ namespace util {
 	std::string load_string_resource(LPCTSTR name);
 	std::string wstring_to_utf8(const std::wstring& str);
 	std::wstring utf8_to_wstring(const std::string& utf8);
-	semver::version getNCMExecutableVersion();
+	semver::version<> getNCMExecutableVersion();
+	inline bool semverSatisfies(const semver::version<>& version, const std::string& req) {
+		const auto range = semver::try_parse_range(req);
+		return range && range->contains(version);
+	}
 	std::wstring wreplaceAll(std::wstring str, const std::wstring& from, const std::wstring& to);
 	void restartNCM();
 	void exec(std::wstring cmd, bool ele, bool showWindow = false);

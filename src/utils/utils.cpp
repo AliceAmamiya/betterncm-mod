@@ -300,8 +300,8 @@ std::wstring util::utf8_to_wstring(const std::string& utf8) {
 	return utf16;
 }
 
-semver::version util::getNCMExecutableVersion() {
-	static std::optional<semver::version> cached;
+semver::version<> util::getNCMExecutableVersion() {
+	static std::optional<semver::version<>> cached;
 	if (cached.has_value()) return cached.value();
 
 	DWORD verHandle = 0;
@@ -317,10 +317,10 @@ semver::version util::getNCMExecutableVersion() {
 				if (size) {
 					auto verInfo = (VS_FIXEDFILEINFO*)lpBuffer;
 					if (verInfo->dwSignature == 0xfeef04bd) {
-						cached = semver::version{
-								static_cast<uint8_t>((verInfo->dwFileVersionMS >> 16) & 0xffff),
-								static_cast<uint8_t>((verInfo->dwFileVersionMS >> 0) & 0xffff),
-								static_cast<uint8_t>((verInfo->dwFileVersionLS >> 16) & 0xffff)
+						cached = semver::version<>{
+								static_cast<uint32_t>((verInfo->dwFileVersionMS >> 16) & 0xffff),
+								static_cast<uint32_t>((verInfo->dwFileVersionMS >> 0) & 0xffff),
+								static_cast<uint32_t>((verInfo->dwFileVersionLS >> 16) & 0xffff)
 						};
 						return cached.value();
 					}

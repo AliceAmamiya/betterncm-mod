@@ -26,7 +26,7 @@
 #include <codecvt>
 #include <Windows.h>
 #include <thread>
-#include "neargye/semver.hpp"
+#include <semver.hpp>
 #include "kubazip/zip/zip.h"
 #include <WinInet.h>
 

@@ -12,7 +12,11 @@ std::map<std::string, std::shared_ptr<PluginNativeAPI>> plugin_native_apis;
 std::vector<std::shared_ptr<Plugin>> PluginManager::packedPlugins;
 
 auto ncmVer = util::getNCMExecutableVersion();
-const unsigned short ncmVersion[3] = { ncmVer.major, ncmVer.minor, ncmVer.patch };
+const unsigned short ncmVersion[3] = {
+	static_cast<unsigned short>(ncmVer.major()),
+	static_cast<unsigned short>(ncmVer.minor()),
+	static_cast<unsigned short>(ncmVer.patch())
+};
 namespace fs = std::filesystem;
 
 int addNativeAPI(NativeAPIType args[], int argsNum, const char* identifier, char* function(void**)) {
@@ -244,7 +248,7 @@ void PluginManager::extractPackedPlugins() {
 	}
 
 	fs::create_directories(datapath + L"/plugins_runtime");
-	static const bool isNCM3 = util::getNCMExecutableVersion().major == 3;
+	static const bool isNCM3 = util::getNCMExecutableVersion().major() == 3;
 
 	for (auto file : fs::directory_iterator(datapath + L"/plugins")) {
 		BNString path = file.path().wstring();
@@ -275,7 +279,7 @@ void PluginManager::extractPackedPlugins() {
 
 				extractPlugin();
 				if (manifest.name == "PluginMarket") {
-					if (semver::version(manifest.version) < semver::version("0.7.2")) {
+					if (semver::from_string(manifest.version) < semver::version<>(0, 7, 2)) {
 						util::extractPluginMarket();
 						extractPlugin();
 					}
@@ -287,7 +291,7 @@ void PluginManager::extractPackedPlugins() {
 					!manifest.ncm3Compatible // duplicated / ncm3 but not ncm3-compatible / do not meet version req
 					) ||
 					(
-						!semver::range::satisfies(
+						!util::semverSatisfies(
 							util::getNCMExecutableVersion(), manifest.ncm_version_req
 						)
 					)
@@ -434,7 +438,7 @@ void PluginManager::performForceInstallAndUpdateSync(const std::string& source, 
 					}
 
 					try {
-						if ((remote_plugin.force_update == "*" || semver::range::satisfies(semver::from_string(localVer), remote_plugin.force_update)) &&
+						if ((remote_plugin.force_update == "*" || util::semverSatisfies(semver::from_string(localVer), remote_plugin.force_update)) &&
 							localVer != remote_plugin.version) {
 							std::cout << "\t\t - Force update: Downloading...\n";
 
