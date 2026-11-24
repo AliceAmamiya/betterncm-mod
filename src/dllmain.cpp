@@ -39,9 +39,9 @@ void bncmMain() {
 				}
 				else {
 					// Resolve data directory relative to the DLL's own location
-				wchar_t dllPath[MAX_PATH];
-				GetModuleFileNameW(g_hModule, dllPath, MAX_PATH);
-				datapath = std::filesystem::path(dllPath).parent_path() / L"betterncm";
+					wchar_t dllPath[MAX_PATH];
+					GetModuleFileNameW(g_hModule, dllPath, MAX_PATH);
+					datapath = (std::filesystem::path(dllPath).parent_path() / L"betterncm").wstring();
 				}
 
 				if (process_type == Main) {

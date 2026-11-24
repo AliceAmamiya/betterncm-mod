@@ -33,10 +33,18 @@ jobs:
       uses: lukka/run-vcpkg@v10
       with:
         vcpkgGitCommitId: 69efe9cc2df0015f0bb2d37d55acde4a75c9a25b
-    - name: Install vcpkg dependencies
+    - name: Provide 7-Zip for vcpkg
+      shell: pwsh
       run: |
-        & "$env:VCPKG_ROOT\vcpkg.exe" install --triplet=x86-windows --x-install-root=./vcpkg_installed_86/
-        & "$env:VCPKG_ROOT\vcpkg.exe" install --triplet=x64-windows --x-install-root=./vcpkg_installed/
+        $vcpkgRoot = Split-Path (Get-Command vcpkg).Source
+        $msiDir = Join-Path $vcpkgRoot "downloads\tools\7zip_msi-21.07-windows\Files\7-Zip"
+        $exeDir = Join-Path $vcpkgRoot "downloads\tools\7zip-21.07-windows"
+        New-Item -ItemType Directory -Force -Path $msiDir, $exeDir | Out-Null
+        Copy-Item "C:\Program Files\7-Zip\*" $msiDir -Recurse -Force
+        Copy-Item "C:\Program Files\7-Zip\7z.exe" (Join-Path $exeDir "7za.exe") -Force
+        Copy-Item "C:\Program Files\7-Zip\7z.dll" (Join-Path $exeDir "7z.dll") -Force
+    - name: Install vcpkg dependencies
+      run: ./InstallDependencies.bat
     - name: Install NPM packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: cd ./src/js-framework ; npm i
