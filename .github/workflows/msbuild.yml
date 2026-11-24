@@ -30,19 +30,9 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
       
     - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v10
+      uses: lukka/run-vcpkg@v11
       with:
-        vcpkgGitCommitId: 69efe9cc2df0015f0bb2d37d55acde4a75c9a25b
-    - name: Provide 7-Zip for vcpkg
-      shell: pwsh
-      run: |
-        $vcpkgRoot = Split-Path (Get-Command vcpkg).Source
-        $msiDir = Join-Path $vcpkgRoot "downloads\tools\7zip_msi-21.07-windows\Files\7-Zip"
-        $exeDir = Join-Path $vcpkgRoot "downloads\tools\7zip-21.07-windows"
-        New-Item -ItemType Directory -Force -Path $msiDir, $exeDir | Out-Null
-        Copy-Item "C:\Program Files\7-Zip\*" $msiDir -Recurse -Force
-        Copy-Item "C:\Program Files\7-Zip\7z.exe" (Join-Path $exeDir "7za.exe") -Force
-        Copy-Item "C:\Program Files\7-Zip\7z.dll" (Join-Path $exeDir "7z.dll") -Force
+        vcpkgGitCommitId: 40e9e742d5fef85832e3a82cb15a3ca6c8cf76ed
     - name: Install vcpkg dependencies
       run: ./InstallDependencies.bat
     - name: Install NPM packages
